@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import com.dalsemi.onewire.OneWireAccessProvider;
@@ -44,6 +45,11 @@ public class App {
         try
         {
             adapter = OneWireAccessProvider.getDefaultAdapter();
+
+            // List the ports using adapter.getPortNames()
+            
+            //adapter.setPortName("/dev/ttyUSB0");
+
             default_adapter = true;
         }
         catch (OneWireException e)
@@ -133,6 +139,31 @@ public class App {
         throws OneWireIOException, OneWireException, IOException, Exception
     {
         System.out.println("Hello, World!");
-        getButtonAddresses();
+        //getButtonAddresses();
+
+        DSPortAdapter adapter;
+        String        port;
+
+        // get the adapters
+        for (Enumeration adapter_enum = OneWireAccessProvider.enumerateAllAdapters();
+                                  adapter_enum.hasMoreElements(); )
+        {
+            // cast the enum as a DSPortAdapter
+            adapter = ( DSPortAdapter ) adapter_enum.nextElement();
+
+            System.out.print("Adapter: " + adapter.getAdapterName() + " with ports: ");
+
+            // get the ports
+            for (Enumeration port_enum = adapter.getPortNames();
+                                port_enum.hasMoreElements(); )
+            {
+                // cast the enum as a String
+                port = ( String ) port_enum.nextElement();
+
+                System.out.print(port + " ");
+            }
+
+            System.out.println();
+        }
     }
 }
