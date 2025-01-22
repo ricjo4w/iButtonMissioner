@@ -41,6 +41,9 @@ public class App {
         DSPortAdapter adapter = null;
         boolean default_adapter = true;
 
+        // Get the DS1490F USB adapter
+        adapter = OneWireAccessProvider.getAdapter("DS9097U", "USB1");
+
         // attempt to get a default adapter
         try
         {
@@ -139,7 +142,32 @@ public class App {
         throws OneWireIOException, OneWireException, IOException, Exception
     {
         System.out.println("Hello, World!");
-        getButtonAddresses();
+        //getButtonAddresses();
+
+        DSPortAdapter adapter;
+        String        port;
+
+        // get the adapters
+        for (Enumeration adapter_enum = OneWireAccessProvider.enumerateAllAdapters();
+                                  adapter_enum.hasMoreElements(); )
+        {
+            // cast the enum as a DSPortAdapter
+            adapter = ( DSPortAdapter ) adapter_enum.nextElement();
+
+            System.out.print("Adapter: " + adapter.getAdapterName() + " with ports: ");
+
+            // get the ports
+            for (Enumeration port_enum = adapter.getPortNames();
+                                port_enum.hasMoreElements(); )
+            {
+                // cast the enum as a String
+                port = ( String ) port_enum.nextElement();
+
+                System.out.print(port + " ");
+            }
+
+            System.out.println();
+        }
 
     }
 }
